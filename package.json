@@ -1,0 +1,30 @@
+{
+  "name": "fluent-mysql",
+  "version": "1.0.0",
+  "description": "MySQL query builder to perform database operations",
+  "main": "index.js",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enes-sahin/fluent-mysql.git"
+  },
+  "keywords": [
+    "mysql",
+    "fluent-mysql",
+    "mysql-query",
+    "mysql-query-builder",
+    "query-builder"
+  ],
+  "author": "Enes SAHIN",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enes-sahin/fluent-mysql/issues"
+  },
+  "homepage": "https://github.com/enes-sahin/fluent-mysql#readme"
+}

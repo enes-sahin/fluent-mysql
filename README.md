@@ -44,6 +44,8 @@
   - [groupBy() / having()](#groupby--having)
 - [Joins](#joins)
   - [join()](#join)
+  - [leftJoin()](#leftjoin)
+  - [rightJoin()](#rightjoin)
 - [Aggregate Functions](#aggregate-functions)
   - [count()](#count)
   - [min()](#min)
@@ -406,7 +408,6 @@ authorBooks.then( results => {
 
 ## Joins
 
-Currently **fluent-mysql** supports only inner join.
 
 ### join()
 
@@ -417,6 +418,32 @@ let users = DB.table('users')
               .join('contacts', 'users.id', '=', 'contacts.user_id')
               .join('orders', 'users.id', '=', 'orders.user_id')
               .select('users.*', 'contacts.phone', 'orders.price')
+              .get();
+
+users.then( results => {
+  //...
+});
+```
+
+### leftJoin()
+
+```js
+let users = DB.table('users')
+              .leftJoin('contacts', 'users.id', '=', 'contacts.user_id')
+              .select('users.*', 'contacts.phone')
+              .get();
+
+users.then( results => {
+  //...
+});
+```
+
+### rightJoin()
+
+```js
+let users = DB.table('users')
+              .rightJoin('contacts', 'users.id', '=', 'contacts.user_id')
+              .select('users.*', 'contacts.phone')
               .get();
 
 users.then( results => {

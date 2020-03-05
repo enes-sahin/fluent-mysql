@@ -30,6 +30,8 @@ const mysql = require('mysql');
  * @property {boolean} fetchFirst
  * @property {boolean} existsQuery
  * @property {array} joins
+ * @property {array} leftJoins
+ * @property {array} rightJoins
  * @property {string} groupByColumn
  * @property {array} havingArray
  * @property {number} limitNumber
@@ -63,6 +65,8 @@ class Database {
     this.fetchFirst     = false;
     this.existsQuery    = false;
     this.joins          = [];
+    this.leftJoins      = [];
+    this.rightJoins     = [];
     this.groupByColumn  = null;
     this.havingArray    = [];
     this.limitNumber    = null;
@@ -126,11 +130,25 @@ class Database {
    */
   getJoinStatement = () => {
     let joinStatement = '';
+
     if(this.tableName != null && this.tableName != undefined && this.joins.length) {
       for (let index = 0; index < this.joins.length; index++) {
         joinStatement += ' INNER JOIN '+this.joins[index][0]+' ON '+this.joins[index][1] + ' '+this.joins[index][2] + ' ' + this.joins[index][3]+' ';
       }
     }
+
+    if(this.tableName != null && this.tableName != undefined && this.leftJoins.length) {
+      for (let index = 0; index < this.leftJoins.length; index++) {
+        joinStatement += ' LEFT JOIN '+this.leftJoins[index][0]+' ON '+this.leftJoins[index][1] + ' '+this.leftJoins[index][2] + ' ' + this.leftJoins[index][3]+' ';
+      }
+    }
+
+    if(this.tableName != null && this.tableName != undefined && this.rightJoins.length) {
+      for (let index = 0; index < this.rightJoins.length; index++) {
+        joinStatement += ' RIGHT JOIN '+this.rightJoins[index][0]+' ON '+this.rightJoins[index][1] + ' '+this.rightJoins[index][2] + ' ' + this.rightJoins[index][3]+' ';
+      }
+    }
+
     return joinStatement;
   }
 
@@ -779,6 +797,28 @@ class Database {
   }
 
   /**
+   * Add left join arguments into leftJoins array
+   * 
+   * @param {array} args
+   * @return {Database} 
+   */
+  leftJoin = (...args) => {
+    this.leftJoins.push(args);
+    return this;
+  }
+
+  /**
+   * Add right join arguments into rightJoins array
+   * 
+   * @param {array} args
+   * @return {Database} 
+   */
+  rightJoin = (...args) => {
+    this.rightJoins.push(args);
+    return this;
+  }
+
+  /**
    * Sets group by column
    * 
    * @param {string} column
@@ -917,6 +957,8 @@ class Database {
     this.fetchFirst     = false;
     this.existsQuery    = false;
     this.joins          = [];
+    this.leftJoins      = [];
+    this.rightJoins     = [];
     this.groupByColumn  = null;
     this.havingArray    = [];
     this.limitNumber    = null;

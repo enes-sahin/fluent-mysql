@@ -70,7 +70,7 @@ Use the node package manager [npm](https://www.npmjs.com/package/fluent-mysql) t
 npm install fluent-mysql
 ```
 
-```node
+```js
 const DB = require('fluent-mysql');
 ```
 
@@ -78,7 +78,7 @@ const DB = require('fluent-mysql');
 The parameters are the same with [mysql](https://www.npmjs.com/package/mysql) library. You can list all options from [here](https://www.npmjs.com/package/mysql#connection-options)
 
 
-```node
+```js
 const DB = require('fluent-mysql');
 
 let connection = DB.connect({
@@ -105,7 +105,7 @@ connection.then(result => {
 
 It is necessary to specify `table` in all queries except for writing your own query with `query` method. 
 
-```node
+```js
 // Get all records from users table
 let users = DB.table('users').get();
 
@@ -118,7 +118,7 @@ users.then( results => {
 
 Using the `select` method, you can specify a custom select clause for the query.
 
-```node
+```js
 let users = DB.table('users').select('name', 'phone', 'age').get();
 
 users.then( results => {
@@ -129,7 +129,7 @@ users.then( results => {
 
 You can also use the distinct method to force the query to return distinct results.
 
-```node
+```js
 let users = DB.table('users').select('name').distinct().get();
 
 users.then( results => {
@@ -147,7 +147,7 @@ users.then( results => {
 
 `get` must be the last method in methods chain.
 
-```node
+```js
 let users = DB.table('users').get();
 
 users.then( results => {
@@ -158,7 +158,7 @@ users.then( results => {
 ### first()
 You can get only the first row from all results.
 
-```node
+```js
 let users = DB.table('users').first();
 
 users.then( result => {
@@ -170,7 +170,7 @@ users.then( result => {
 To retrieve a single row by its id column value, use the `find` method:
 
 
-```node
+```js
 let users = DB.table('users').find(10);
 
 users.then( result => {
@@ -181,7 +181,7 @@ users.then( result => {
 ### query()
 
 You can also write your own query with `query` method.
-```node
+```js
 let users = DB.query(`SELECT * FROM users WHERE name = "John"`).get();
 
 users.then( results => {
@@ -194,7 +194,7 @@ users.then( results => {
 ### where()
 
 
-```node
+```js
 let users = DB.table('users').where('userName', '=', 'John' ).get();
 
 users.then( results => {
@@ -205,7 +205,7 @@ users.then( results => {
 ### orWhere()
 
 
-```node
+```js
 let users = DB.table('users').where('userName', '=', 'John' ).orWhere('age', '>', 20 ).get();
 
 users.then( results => {
@@ -216,7 +216,7 @@ users.then( results => {
 ### whereBetween()
 
 
-```node
+```js
 // Get users whose ages between 20 and 30
 let users = DB.table('users').whereBetween('age', 20, 40 ).get();
 
@@ -228,7 +228,7 @@ users.then( results => {
 ### orWhereBetween()
 
 
-```node
+```js
 let users = DB.table('users').where('name', '=', 'John' ).orWhereBetween('age', 30, 40 ).get();
 
 users.then( results => {
@@ -239,7 +239,7 @@ users.then( results => {
 ### whereNotBetween()
 
 
-```node
+```js
 let users = DB.table('users').whereNotBetween('age', 50, 60 ).get();
 
 users.then( results => {
@@ -250,7 +250,7 @@ users.then( results => {
 ### orWhereNotBetween()
 
 
-```node
+```js
 let users = DB.table('users').whereBetween('salary', 1000, 2000 ).orWhereNotBetween('age', 50, 60 ).get();
 
 users.then( results => {
@@ -261,7 +261,7 @@ users.then( results => {
 ### whereIn()
 
 
-```node
+```js
 let users = DB.table('users').whereIn('age', [25,35,45] ).get();
 
 users.then( results => {
@@ -273,7 +273,7 @@ users.then( results => {
 ### orWhereIn()
 
 
-```node
+```js
 let users = DB.table('users').where('userName', '=', 'John' ).orWhereIn('age', [25,35,45] ).get();
 
 users.then( results => {
@@ -285,7 +285,7 @@ users.then( results => {
 ### whereNotIn()
 
 
-```node
+```js
 let users = DB.table('users').whereNotIn('age', [25,35,45] ).get();
 
 users.then( results => {
@@ -297,7 +297,7 @@ users.then( results => {
 ### orWhereNotIn()
 
 
-```node
+```js
 let users = DB.table('users').where('userName', '=', 'John' ).orWhereNotIn('age', [20,30,40] ).get();
 
 users.then( results => {
@@ -309,7 +309,7 @@ users.then( results => {
 ### whereNull()
 
 
-```node
+```js
 let users = DB.table('users').whereNull('phone').get();
 
 users.then( results => {
@@ -321,7 +321,7 @@ users.then( results => {
 ### orWhereNull()
 
 
-```node
+```js
 let users = DB.table('users').whereNull('phone').orWhereNull('email').get();
 
 users.then( results => {
@@ -333,7 +333,7 @@ users.then( results => {
 ### whereNotNull()
 
 
-```node
+```js
 let users = DB.table('users').whereNotNull('phone' ).get();
 
 users.then( results => {
@@ -344,7 +344,7 @@ users.then( results => {
 ### orWhereNotNull()
 
 
-```node
+```js
 let users = DB.table('users').where('age', '>', 25 ).orWhereNotNull('email').get();
 
 users.then( results => {
@@ -358,7 +358,7 @@ users.then( results => {
 The `orderBy` method allows you to sort the result of the query by a given column. The first argument to the `orderBy` method should be the column you wish to sort by, while the second argument controls the direction of the sort and may be either `asc` or `desc`.
 
 
-```node
+```js
 let users = DB.table('users').orderBy('name', 'ASC').get();
 
 users.then( results => {
@@ -369,7 +369,7 @@ users.then( results => {
 ### limit()
 To limit the number of results returned from the query, you may use the `limit` method.
 
-```node
+```js
 let users = DB.table('users').limit(20).get();
 
 users.then( results => {
@@ -380,7 +380,7 @@ users.then( results => {
 ### offset()
 To skip a given number of results in the query, you may use the `offset` method.
 
-```node
+```js
 let users = DB.table('users').limit(20).offset(10).get();
 
 users.then( results => {
@@ -392,7 +392,7 @@ users.then( results => {
 
 The `groupBy` and `having` methods may be used to group the query results.
 
-```node
+```js
 let authorBooks = DB.table('books')
                     .select('author', 'COUNT(bookID) AS totalBook')
                     .groupBy('author')
@@ -412,7 +412,7 @@ Currently **fluent-mysql** supports only inner join.
 
 The **fluent-mysql** may also be used to write join statements. The first argument passed to the join method is the name of the table you need to join to, while the remaining arguments specify the column constraints for the join. You can even join to multiple tables in a single query.
 
-```node
+```js
 let users = DB.table('users')
               .join('contacts', 'users.id', '=', 'contacts.user_id')
               .join('orders', 'users.id', '=', 'orders.user_id')
@@ -430,33 +430,33 @@ You may call any of these methods after constructing your query. `min`, `max`, `
 
 ### count()
 
-```node
+```js
 let usersCount = DB.table('users').count();
 ```
 ### min()
 
-```node
+```js
 // SELECT MIN(age) AS minAge FROM users
 let minAge = DB.table('users').min('age', 'minAge');
 ```
 
 ### max()
 
-```node
+```js
 // SELECT MAX(age) AS maxAge FROM users
 let maxAge = DB.table('users').max('age', 'maxAge');
 ```
 
 ### avg()
 
-```node
+```js
 // SELECT AVG(age) AS avgAge FROM users
 let avgAge = DB.table('users').avg('age', 'avgAge');
 ```
 
 ### sum()
 
-```node
+```js
 // SELECT SUM(age) AS sumAge FROM users
 let sumAge = DB.table('users').sum('age', 'sumAge');
 ```
@@ -465,7 +465,7 @@ let sumAge = DB.table('users').sum('age', 'sumAge');
 
 Instead of using the `count` method to determine if any records exist that match your query's constraints, you may use the `exists` method.
 
-```node
+```js
 let exists = DB.table('users').where('name', '=', 'John').exists();
 ```
 
@@ -473,7 +473,7 @@ let exists = DB.table('users').where('name', '=', 'John').exists();
 
 ### insert()
 
-```node
+```js
 let insertion = DB.table('users')
                   .insert({id: 50, name: 'John', age:25});
               
@@ -486,7 +486,7 @@ insertion.then( result => {
 
 This method updates  a record, if not exists creates it.
 
-```node
+```js
 let update = DB.table('users')
                .insertOrUpdate({name: 'John', age:25});
               
@@ -498,7 +498,7 @@ insertion.then( result => {
 ### update()
 
 
-```node
+```js
 let update = DB.table('users')
                .update({id: 125, name: 'John', age:35});
               
@@ -510,7 +510,7 @@ insertion.then( result => {
 Also you can use `where` method in order to specify conditions. 
 (Be careful about putting `where` method before `update`.)
 
-```node
+```js
 let update = DB.table('users')
                .where('age', '>',40)
                .update({salary :  5000});
@@ -522,7 +522,7 @@ insertion.then( result => {
 
 ### delete()
 
-```node
+```js
 let deletion = DB.table('users')
                .where('name','=','John')
                .delete();
@@ -537,7 +537,7 @@ deletion.then( result => {
 
 Example of using with multiple methods: 
 
-```node
+```js
 let users = DB.table('users')
               .select('name','age')
               .where('age', '>', 30)
@@ -552,7 +552,7 @@ users.then( results => {
 ```
 **As long as you use the last method correctly, you can change the order of methods**
 
-```node
+```js
 //Both functions returns the same result
 let users = DB.table('users').select('name','age').where('age', '>', 30).get();
     

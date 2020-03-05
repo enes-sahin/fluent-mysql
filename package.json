@@ -1,6 +1,6 @@
 {
   "name": "fluent-mysql",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "MySQL query builder to perform database operations",
   "main": "index.js",
   "dependencies": {

@@ -718,7 +718,7 @@ class Database {
     if(id) {
       this.findId = id;
     }
-    return this;
+    return this.get();
   }
 
   /**

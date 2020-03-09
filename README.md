@@ -2,10 +2,12 @@
 # fluent-mysql
 
 
-![Image of version](https://img.shields.io/badge/npm-v1.0.0-blue)
+![Image of version](https://img.shields.io/badge/npm-v1.1.0-blue)
 ![Image of version](https://img.shields.io/badge/licence-MIT-yellowgreen)
 
-**fluent-mysql** is a query builder for MySQL. It performs basic database operations. It uses [mysql](https://www.npmjs.com/package/mysql) library.
+**fluent-mysql** is a query builder for MySQL. It performs basic database operations using [mysql](https://www.npmjs.com/package/mysql) library.
+
+* It is a **ES5** compatible.
 
 *Inspired by [Laravel Query Builder](https://laravel.com/docs/master/queries)*
 

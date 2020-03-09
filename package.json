@@ -1,13 +1,19 @@
 {
   "name": "fluent-mysql",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "MySQL query builder to perform database operations",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "dependencies": {
     "mysql": "^2.18.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0"
+  },
   "scripts": {
+    "build": "babel ./src -d ./lib",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" "
   },
   "repository": {

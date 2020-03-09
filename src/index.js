@@ -416,6 +416,8 @@ class Database {
     let existsQuery = this.existsQuery;
     let fetchFirst  = this.fetchFirst;
     let hasCount    = this.hasCount;
+    let findId      = this.findId;
+    let self        = this;
 
     return new Promise( (resolve, reject) => {
       this.connection.query(this.getQueryStatement('get'), function (error, results, fields) {
@@ -426,12 +428,12 @@ class Database {
           resolve(results.length > 0);
         } else {
           // Only get first result
-          if(fetchFirst == true){
-            resolve(results[0]);
+          if(fetchFirst == true || findId != null){
+            resolve(self.json(results[0]));
           } if(hasCount == true){
-            resolve(results[0].count);
+            resolve(self.json(results[0].count));
           } else {
-            resolve(results);
+            resolve(self.json(results));
           }
         }
       });
@@ -445,10 +447,11 @@ class Database {
    * @return {Object} - Promise 
    */
   insert = params => {
+    let self = this;
     return new Promise( (resolve, reject) => {
       this.connection.query(this.getQueryStatement('insert'), params, function (error, results, fields) {
         if (error) reject( error );
-        resolve(results);
+        resolve(self.json(results));
       });
       this.setPropertiesToDefault();
     });
@@ -460,10 +463,11 @@ class Database {
    * @return {Object} - Promise 
    */
   insertOrUpdate = params => {
+    let self = this;
     return new Promise( (resolve, reject) => {
       this.connection.query(this.getQueryStatement('insertOrUpdate'), [params, params], function (error, results, fields) {
         if (error) reject( error );
-        resolve(results);
+        resolve(self.json(results));
       });
       this.setPropertiesToDefault();
     });
@@ -475,11 +479,12 @@ class Database {
    * @return {Object} - Promise 
    */
   update = params => {
+    let self = this;
     return new Promise( (resolve, reject) => {
       console.log(this.getQueryStatement('update'));
       this.connection.query(this.getQueryStatement('update'), params, function (error, results, fields) {
         if (error) reject( error );
-        resolve(results);
+        resolve(self.json(results));
       });
       this.setPropertiesToDefault();
     });
@@ -491,10 +496,11 @@ class Database {
    * @return {Object} - Promise 
    */
   delete = () => {
+    let self = this;
     return new Promise( (resolve, reject) => {
       this.connection.query(this.getQueryStatement('delete'), function (error, results, fields) {
         if (error) reject( error );
-        resolve(results);
+        resolve(self.json(results));
       });
       this.setPropertiesToDefault();
     });
@@ -507,10 +513,11 @@ class Database {
    * @return {Object} - Promise 
    */
   query = queryStatement => {
+    let self = this;
     return new Promise( (resolve, reject) => {
       this.connection.query(queryStatement, function (error, results, fields) {
         if (error) reject( error );
-        resolve(results);
+        resolve(self.json(results));
       });
       this.setPropertiesToDefault();
     });
@@ -964,6 +971,20 @@ class Database {
     this.limitNumber    = null;
     this.offsetNumber   = null;
     this.hasCount       = false;
+  }
+
+  /**
+   * Json Converter
+   * 
+   * @param {Object}
+   * @return {Object}
+   */
+  json = (res) => {
+    if(typeof res == 'object') {
+      return JSON.parse(JSON.stringify(res));
+    } else {
+      return res;
+    }
   }
 }
 

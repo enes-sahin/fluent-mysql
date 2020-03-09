@@ -105,3 +105,6 @@ dist
 
 #Test Directory
 test
+
+# Lib Directory
+lib

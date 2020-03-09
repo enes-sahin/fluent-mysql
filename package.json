@@ -7,13 +7,14 @@
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.7.0"
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.7"
   },
   "scripts": {
     "build": "babel ./src -d ./lib",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" "
   },
   "repository": {

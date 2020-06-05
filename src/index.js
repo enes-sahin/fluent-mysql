@@ -435,7 +435,7 @@ class Database {
         } else {
           // Only get first result
           if(fetchFirst == true || findId != null){
-            resolve(self.json(results[0]));
+            resolve(results.length ? self.json(results[0]) : self.json(results));
           } if(hasCount == true){
             resolve(self.json(results[0].count));
           } else {

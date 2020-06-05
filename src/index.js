@@ -431,7 +431,7 @@ class Database {
 
         // if exists() method is used
         if(existsQuery){
-          resolve(results.length > 0);
+          resolve(self.json(results[0].count) > 0);
         } else {
           // Only get first result
           if(fetchFirst == true || findId != null){

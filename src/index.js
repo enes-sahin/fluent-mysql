@@ -42,38 +42,9 @@ const mysql = require('mysql');
 
 class Database {
   constructor() {
-    this.connection     = null;
-    this.pool           = null;
-    this.tableName      = null;
-    this.whereArray     = [];
-    this.orWhereArray   = [];
-    this.whereBetweenArray = [];
-    this.orWhereBetweenArray = [];
-    this.whereNotBetweenArray = [];
-    this.orWhereNotBetweenArray = [];
-    this.whereInArray = [];
-    this.whereNotInArray = [];
-    this.orWhereInArray = [];
-    this.orWhereNotInArray = [];
-    this.whereNullArray = [];
-    this.orWhereNullArray = [];
-    this.whereNotNullArray = [];
-    this.orWhereNotNullArray = [];
-    this.selections     = '*';
-    this.distinctClause = '';
-    this.findId         = null;
-    this.orderType      = null;
-    this.orderColumn    = null;
-    this.fetchFirst     = false;
-    this.existsQuery    = false;
-    this.joins          = [];
-    this.leftJoins      = [];
-    this.rightJoins     = [];
-    this.groupByColumn  = null;
-    this.havingArray    = [];
-    this.limitNumber    = null;
-    this.offsetNumber   = null;
-    this.hasCount       = false;
+    this.connection = null;
+    this.pool       = null;
+    this.setPropertiesToDefault();
   }
 
   /**

@@ -7,6 +7,7 @@ const mysql = require('mysql');
  * Mysql Database class 
  *  
  * @property {Object} connection
+ * @property {object} pool
  * @property {string} tableName
  * @property {array}  whereArray
  * @property {array}  orWhereArray
@@ -41,37 +42,9 @@ const mysql = require('mysql');
 
 class Database {
   constructor() {
-    this.connection     = null;
-    this.tableName      = null;
-    this.whereArray     = [];
-    this.orWhereArray   = [];
-    this.whereBetweenArray = [];
-    this.orWhereBetweenArray = [];
-    this.whereNotBetweenArray = [];
-    this.orWhereNotBetweenArray = [];
-    this.whereInArray = [];
-    this.whereNotInArray = [];
-    this.orWhereInArray = [];
-    this.orWhereNotInArray = [];
-    this.whereNullArray = [];
-    this.orWhereNullArray = [];
-    this.whereNotNullArray = [];
-    this.orWhereNotNullArray = [];
-    this.selections     = '*';
-    this.distinctClause = '';
-    this.findId         = null;
-    this.orderType      = null;
-    this.orderColumn    = null;
-    this.fetchFirst     = false;
-    this.existsQuery    = false;
-    this.joins          = [];
-    this.leftJoins      = [];
-    this.rightJoins     = [];
-    this.groupByColumn  = null;
-    this.havingArray    = [];
-    this.limitNumber    = null;
-    this.offsetNumber   = null;
-    this.hasCount       = false;
+    this.connection = null;
+    this.pool       = null;
+    this.setPropertiesToDefault();
   }
 
   /**
@@ -116,6 +89,38 @@ class Database {
   end = () => {
     this.connection.end();
   }
+
+  /**
+   * @param {object} params
+   * @return {void}
+   */
+  createPool = (params) => {
+    let pool = mysql.createPool(params);
+    this.pool = pool;
+  }
+
+  /**
+   * @return {object} - Promise
+   */
+  getPoolConnection = () => {
+    let self = this;
+    return new Promise( (resolve, reject) => {
+      self.pool.getConnection(function(err, connection) {
+        if (err) {
+          reject(err);
+        }
+        self.connection = connection;
+        resolve(connection);
+      });
+    });
+  };
+
+  /**
+   * @return {void}
+   */
+  releasePool = () => {
+    this.connection.release();
+  };
 
   /**
    * Creates join statement if any and returns it
@@ -333,7 +338,7 @@ class Database {
 
     let orderByStatement = '';
     if(this.orderType != null && this.orderColumn != null) {
-      orderbyStatement = ` ORDER BY ${this.orderColumn} ${this.orderType} `;
+      orderByStatement = ` ORDER BY ${this.orderColumn} ${this.orderType} `;
     }
     return orderByStatement;
   }
@@ -417,19 +422,20 @@ class Database {
     let fetchFirst  = this.fetchFirst;
     let hasCount    = this.hasCount;
     let findId      = this.findId;
+    let connection  = this.pool !== null ? this.pool : this.connection;
     let self        = this;
 
     return new Promise( (resolve, reject) => {
-      this.connection.query(this.getQueryStatement('get'), function (error, results, fields) {
+      connection.query(this.getQueryStatement('get'), function (error, results, fields) {
         if (error) reject( error );
 
         // if exists() method is used
         if(existsQuery){
-          resolve(results.length > 0);
+          resolve(self.json(results[0].count) > 0);
         } else {
           // Only get first result
           if(fetchFirst == true || findId != null){
-            resolve(self.json(results[0]));
+            resolve(results.length ? self.json(results[0]) : self.json(results));
           } if(hasCount == true){
             resolve(self.json(results[0].count));
           } else {
@@ -447,9 +453,10 @@ class Database {
    * @return {Object} - Promise 
    */
   insert = params => {
+    let connection  = this.pool !== null ? this.pool : this.connection;
     let self = this;
     return new Promise( (resolve, reject) => {
-      this.connection.query(this.getQueryStatement('insert'), params, function (error, results, fields) {
+      connection.query(this.getQueryStatement('insert'), params, function (error, results, fields) {
         if (error) reject( error );
         resolve(self.json(results));
       });
@@ -463,9 +470,10 @@ class Database {
    * @return {Object} - Promise 
    */
   insertOrUpdate = params => {
+    let connection  = this.pool !== null ? this.pool : this.connection;
     let self = this;
     return new Promise( (resolve, reject) => {
-      this.connection.query(this.getQueryStatement('insertOrUpdate'), [params, params], function (error, results, fields) {
+      connection.query(this.getQueryStatement('insertOrUpdate'), [params, params], function (error, results, fields) {
         if (error) reject( error );
         resolve(self.json(results));
       });
@@ -479,10 +487,11 @@ class Database {
    * @return {Object} - Promise 
    */
   update = params => {
+    let connection  = this.pool !== null ? this.pool : this.connection;
     let self = this;
     return new Promise( (resolve, reject) => {
       console.log(this.getQueryStatement('update'));
-      this.connection.query(this.getQueryStatement('update'), params, function (error, results, fields) {
+      connection.query(this.getQueryStatement('update'), params, function (error, results, fields) {
         if (error) reject( error );
         resolve(self.json(results));
       });
@@ -496,9 +505,10 @@ class Database {
    * @return {Object} - Promise 
    */
   delete = () => {
+    let connection  = this.pool !== null ? this.pool : this.connection;
     let self = this;
     return new Promise( (resolve, reject) => {
-      this.connection.query(this.getQueryStatement('delete'), function (error, results, fields) {
+      connection.query(this.getQueryStatement('delete'), function (error, results, fields) {
         if (error) reject( error );
         resolve(self.json(results));
       });
@@ -514,8 +524,9 @@ class Database {
    */
   query = queryStatement => {
     let self = this;
+    let connection = this.pool !== undefined ? this.pool : this.connection;
     return new Promise( (resolve, reject) => {
-      this.connection.query(queryStatement, function (error, results, fields) {
+      connection.query(queryStatement, function (error, results, fields) {
         if (error) reject( error );
         resolve(self.json(results));
       });
@@ -753,7 +764,7 @@ class Database {
    * @param {string} orderType
    * @return {Database} 
    */
-  orderby = (column, orderType) => {
+  orderBy = (column, orderType) => {
     if( ['asc', 'desc', 'ASC', 'DESC'].includes(orderType) ) {
       this.orderType = orderType;
       this.orderColumn = column;
@@ -953,7 +964,7 @@ class Database {
     this.orWhereInArray = [];
     this.orWhereNotInArray = [];
     this.whereNullArray = [];
-    this.orwhereNullArray = [];
+    this.orWhereNullArray = [];
     this.whereNotNullArray = [];
     this.orWhereNotNullArray = [];
     this.selections     = '*';

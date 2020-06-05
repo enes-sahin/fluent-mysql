@@ -2,12 +2,12 @@
 # fluent-mysql
 
 
-![Image of version](https://img.shields.io/badge/npm-v1.1.0-blue)
+![Image of version](https://img.shields.io/badge/npm-v1.2.0-blue)
 ![Image of version](https://img.shields.io/badge/licence-MIT-yellowgreen)
 
 **fluent-mysql** is a query builder for MySQL. It performs basic database operations using [mysql](https://www.npmjs.com/package/mysql) library.
 
-* It is a **ES5** compatible.
+* It is  **ES5** compatible.
 
 *Inspired by [Laravel Query Builder](https://laravel.com/docs/master/queries)*
 
@@ -15,6 +15,7 @@
 
 - [Installation](#installation)
 - [Connection to Database](#connection-to-database)
+- [Pooling connections](#pooling-connections)
 - [Selections](#selections)
   - [table()](#table)
   - [select()](#select)
@@ -86,11 +87,11 @@ The parameters are the same with [mysql](https://www.npmjs.com/package/mysql) li
 const DB = require('fluent-mysql');
 
 let connection = DB.connect({
-  host     : 'host',
-  user     : 'user',
-  password : 'password',
-  port     : 'port',
-  database : 'database'
+  host     : process.env.DB_HOST,
+  user     : process.env.DB_USER,
+  password : process.env.DB_PASSWORD,
+  port     : process.env.DB_PORT,
+  database : process.env.DB_DATABASE,
 });
 
 connection.then(result => {
@@ -98,6 +99,31 @@ connection.then(result => {
 
   if(result.success){
    // ...
+  }
+}).catch(err => console.log(err));
+
+```
+
+## Pooling connections
+This function provides connection pooling using createPool(config).
+This function gets pool connection, query and release it.
+
+
+```js
+const DB = require('fluent-mysql');
+
+DB.createPool({
+  host     : process.env.DB_HOST,
+  user     : process.env.DB_USER,
+  password : process.env.DB_PASSWORD,
+  port     : process.env.DB_PORT,
+  database : process.env.DB_DATABASE,
+});
+
+let query = DB.table('users').get();
+
+query.then(results => {
+  //...
   }
 }).catch(err => console.log(err));
 
@@ -186,7 +212,7 @@ users.then( result => {
 
 You can also write your own query with `query` method.
 ```js
-let users = DB.query(`SELECT * FROM users WHERE name = "John"`).get();
+let users = DB.query(`SELECT * FROM users WHERE name = "John"`);
 
 users.then( results => {
   //...

@@ -964,7 +964,7 @@ class Database {
     this.orWhereInArray = [];
     this.orWhereNotInArray = [];
     this.whereNullArray = [];
-    this.orwhereNullArray = [];
+    this.orWhereNullArray = [];
     this.whereNotNullArray = [];
     this.orWhereNotNullArray = [];
     this.selections     = '*';

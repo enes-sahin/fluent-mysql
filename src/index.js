@@ -338,7 +338,7 @@ class Database {
 
     let orderByStatement = '';
     if(this.orderType != null && this.orderColumn != null) {
-      orderbyStatement = ` ORDER BY ${this.orderColumn} ${this.orderType} `;
+      orderByStatement = ` ORDER BY ${this.orderColumn} ${this.orderType} `;
     }
     return orderByStatement;
   }
@@ -764,7 +764,7 @@ class Database {
    * @param {string} orderType
    * @return {Database} 
    */
-  orderby = (column, orderType) => {
+  orderBy = (column, orderType) => {
     if( ['asc', 'desc', 'ASC', 'DESC'].includes(orderType) ) {
       this.orderType = orderType;
       this.orderColumn = column;

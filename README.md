@@ -2,7 +2,7 @@
 # fluent-mysql
 
 
-![Image of version](https://img.shields.io/badge/npm-v1.2.0-blue)
+![Image of version](https://img.shields.io/badge/npm-v1.2.1-blue)
 ![Image of version](https://img.shields.io/badge/licence-MIT-yellowgreen)
 
 **fluent-mysql** is a query builder for MySQL. It performs basic database operations using [mysql](https://www.npmjs.com/package/mysql) library.

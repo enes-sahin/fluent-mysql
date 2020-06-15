@@ -524,7 +524,7 @@ class Database {
    */
   query = queryStatement => {
     let self = this;
-    let connection = this.pool !== undefined ? this.pool : this.connection;
+    let connection = this.pool !== null ? this.pool : this.connection;
     return new Promise( (resolve, reject) => {
       connection.query(queryStatement, function (error, results, fields) {
         if (error) reject( error );
